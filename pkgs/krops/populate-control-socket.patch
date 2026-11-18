@@ -1,0 +1,20 @@
+--- a/pkgs/populate/default.nix
++++ b/pkgs/populate/default.nix
+@@ -1602,7 +1602,7 @@
+     exec ${openssh}/bin/ssh \
+         ${concatMapStringsSep " " quote (mkUserPortSSHOpts target)} \
+         -o ControlMaster=auto \
+-        -o ControlPath="$TMPDIR"/ssh-%r@%h:%p.sock \
++        -o ControlPath="$TMPDIR"/%C \
+         -o ControlPersist=1h \
+         -T \
+         ${concatMapStringsSep " " quote target.extraOptions} \
+@@ -1618,7 +1618,7 @@
+   set -efu
+ 
+   # Change to a private temporary directory to prevent collisions.
+-  TMPDIR=$(${coreutils}/bin/mktemp -dt populate.XXXXXXXX)
++  TMPDIR=$(${coreutils}/bin/mktemp -d /tmp/populate.XXXXXXXX)
+   readonly TMPDIR # Ensure the trap will delete the correct thing.
+   export TMPDIR # Share it with the jobs and the ssh wrapper.
+   # Stops the ssh master, if any source started one, also after failures,
