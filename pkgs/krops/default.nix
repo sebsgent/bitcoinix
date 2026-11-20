@@ -14,7 +14,9 @@ let
   # populate creates its control socket at
   # `$TMPDIR/populate.XXXXXXXX/ssh-%r@%h:%p.sock`, which is too long with the
   # default TMPDIR on macOS, within nix-shell on CI, or for an onion host, and
-  # ssh then fails. The patch uses a /tmp directory and the hashed `%C`.
+  # ssh then fails. The patch moves only the socket to a private /tmp
+  # directory and names it by the hashed `%C`. Sources keep using TMPDIR,
+  # where `pass` and `passage` decrypt secrets.
   patchedSrc = pkgs.applyPatches {
     name = "krops-${version}-patched";
     inherit src;
